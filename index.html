@@ -12,11 +12,39 @@
         <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
         <link rel="import" href="/bower_components/paper-button/paper-button.html">
         <style>
+            @import url("//cdn.jsdelivr.net/font-nanum/1.0/nanumbarungothic/nanumbarungothic.css");
+            * {
+                font-family: 'Nanum Barun Gothic';
+            } 
             iron-pages, iron-pages > * {
                 height: 100%;
             }
             paper-scroll-header-panel {
-                height: 50vh;
+                height: 30vh;
+            }
+            paper-toolbar.tall {
+                height: 30vh;
+            }
+            paper-toolbar .title {
+                margin: 0;
+                display: flex;
+                flex: 1;
+                justify-content: center;
+                font-size: 9vw;
+            }
+            paper-toolbar .buttons {
+                display: flex;
+                flex: 1;
+                justify-content: center;
+            }
+            paper-toolbar paper-button {
+                margin-left: 5vw;
+            }
+            paper-toolbar paper-button:first-child {
+                margin-left: 0;
+            }
+            paper-toolbar paper-button p {
+                margin: 1vh 0 0;
             }
             paper-card {
                 margin: 0  5vh 5vh;
@@ -25,30 +53,33 @@
                 margin-top: 5vh;
             }
         </style>
+        <style is="custom-style">
+            paper-toolbar paper-button iron-icon {
+                --iron-icon-width: 10vw;
+                --iron-icon-height: 10vw;
+            }
+        </style>
     </head>
     <body class="fullbleed layout vertical">
         <iron-pages selected="0">
             <div>
                 <paper-scroll-header-panel class="flex">
-                    <paper-toolbar class="top">
-                        <p> This is Top toolbar. </p>
-                    </paper-toolbar>
-                    <paper-toolbar class="middle">
-                        <p>무엇이든 물어보세요.</p>
-                    </paper-toolbar>
-                    <paper-toolbar class="tall bottom">
-                        <paper-button>
-                            <iron-icon icon="icons:add"></iron-icon>
-                            <p>글쓰기</p>
-                        </paper-button>
-                        <paper-button>
-                            <iron-icon icon="icons:add"></iron-icon>
-                            <p>글쓰기</p>
-                        </paper-button>
-                        <paper-button>
-                            <iron-icon icon="icons:add"></iron-icon>
-                            <p>글쓰기</p>
-                        </paper-button>
+                    <paper-toolbar class="tall" justify="center">
+                        <p class="title">무엇이든 물어보세요</p>
+                        <div class="buttons">
+                            <paper-button>
+                                <iron-icon icon="icons:camera-enhance"></iron-icon>
+                                <p>사진 질문</p>
+                            </paper-button>
+                            <paper-button>
+                                <iron-icon icon="icons:gesture"></iron-icon>
+                                <p>그리기 질문</p>
+                            </paper-button>
+                            <paper-button>
+                                <iron-icon icon="icons:description"></iron-icon>
+                                <p>일반 질문</p>
+                            </paper-button>
+                        </div>
                     </paper-toolbar>
                 </paper-scroll-header-panel>
                 <paper-card heading="Fantastic 4" image="http://movie.phinf.naver.net/20150805_130/1438738838024Xywoe_JPEG/movie_image.jpg" elevation="3">
