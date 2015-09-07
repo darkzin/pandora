@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<dom-module id="pandora-dissolve-title">
+    <style>
+        :host {
+            color: blue;
+        }
+    </style>
+    <template>
+        <div id="content">
+            <p>pandora</p>
+            <content></content>
+        </div>
+    </template>
+</dom-module>
+<script>
+    (function(){
+        'use strict';
+        Polymer({
+            is: 'pandora-dissolve-title',
+            behaviors: [
+                Polymer.IronResizableBehavior
+            ],
+            listeners: {
+                'iron-resize': 'listen',
+                'content-scroll': 'content',
+                'paper-header-transform': 'transform'
+            },
+            content: function(){
+                console.log("content!");
+            },
+            transform: function(){
+                console.log("transform!");
+            },
+            listen: function(){
+                console.log("listening...");
+            },
+            created: function(){
+                console.log("Open the Pandora!");
+            }
+        });
+    }());
+</script>
+
