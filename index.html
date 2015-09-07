@@ -14,7 +14,6 @@
         <link rel="import" href="/bower_components/iron-icon/iron-icon.html">
         <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
         <link rel="import" href="/bower_components/paper-button/paper-button.html">
-        <link rel="import" href="/custom_components/pandora-icon-button/pandora-icon-button.html">
         <link rel="import" href="/custom_components/pandora-card/pandora-card.html">
         <style>
             @import url("//cdn.jsdelivr.net/font-nanum/1.0/nanumbarungothic/nanumbarungothic.css");
@@ -54,15 +53,24 @@
             .paper-header paper-button:first-child {
                 margin-left: 0;
             }
+            .paper-header paper-button .icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 20vw;
+                height: 20vw;
+                background-color: red;
+                border-radius: 10vw;
+            }
             .paper-header paper-button p {
                 margin: 1.5vh 0 0;
                 font-size: 4vw;
             }
-            paper-card {
-                margin: 0  5vh 5vh;
+            pandora-card {
+                margin: 0 2vw 3vh;
             }
-            paper-card:first-child {
-                margin-top: 5vh;
+            pandora-card:first-child {
+                margin-top: 3vh;
             }
         </style>
         <style is="custom-style">
@@ -79,27 +87,32 @@
                     <div class="paper-header">
                        <h1>무엇이든 물어보세요</h1>
                         <div class="buttons">
-                            <pandora-icon-button icon="icons:camera-enhance" title="사진질문"></pandora-icon-button>
                             <paper-button>
-                                <iron-icon icon="icons:camera-enhance"></iron-icon>
+                                <div class="icon">
+                                    <iron-icon icon="icons:camera-enhance"></iron-icon>
+                                </div>
                                 <p>사진 질문</p>
                             </paper-button>
                             <paper-button>
-                                <iron-icon icon="icons:gesture"></iron-icon>
+                                <div class="icon">
+                                    <iron-icon icon="icons:gesture"></iron-icon>
+                                </div>
                                 <p>그리기 질문</p>
                             </paper-button>
                             <paper-button>
-                                <iron-icon icon="icons:description"></iron-icon>
+                                <div class="icon">
+                                    <iron-icon icon="icons:description"></iron-icon>
+                                </div>
                                 <p>일반 질문</p>
                             </paper-button>
                         </div>
                     </div>
-                <paper-card heading="Fantastic 4" image="http://movie.phinf.naver.net/20150805_130/1438738838024Xywoe_JPEG/movie_image.jpg" elevation="3">
+                <pandora-card mark-text="답변중" heading="Fantastic 4" image="http://movie.phinf.naver.net/20150805_130/1438738838024Xywoe_JPEG/movie_image.jpg" elevation="3">
                     <div class="card-content">Hi! Hi!</div>
-                </paper-card>
-                <paper-card heading="Batman v Superman : Dawn Of Justice" image="http://ncc.phinf.naver.net/20150818_93/1439877006440I78Dr_GIF/4.gif" elevation="3">
+                </pandora-card>
+                <pandora-card heading="Batman v Superman : Dawn Of Justice" image="http://ncc.phinf.naver.net/20150818_93/1439877006440I78Dr_GIF/4.gif" elevation="3">
                     <div class="card-content">Hi! Hi!</div>
-                </paper-card>
+                </pandora-card>
                 </paper-scroll-header-panel>
             </div>
             <div>1</div>
