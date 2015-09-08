@@ -72,6 +72,34 @@
             pandora-card:first-child {
                 margin-top: 3vh;
             }
+            pandora-card .state {
+                display: inline-block;
+                margin-right: 0.5rem;
+                padding: 0.2rem 0.4rem;
+                border-radius: 3px;
+                color: white;
+            }
+            pandora-card .state.is-progress {
+                background-color: blue;
+            }
+            pandora-card .state.is-complete {
+                background-color: green;
+            }
+            pandora-card .tags span {
+                display: inline-block;
+                margin-right: 0.3rem;
+                font-weight: 100;
+                color: blue;
+            }
+
+            pandora-card .card-content p {
+                line-height: 1.5;
+            }
+
+            /*
+             * Second Page Start Here.
+             */
+    
         </style>
         <style is="custom-style">
             .paper-header paper-button iron-icon {
@@ -107,8 +135,31 @@
                             </paper-button>
                         </div>
                     </div>
-                <pandora-card mark-text="답변중" heading="Fantastic 4" image="http://movie.phinf.naver.net/20150805_130/1438738838024Xywoe_JPEG/movie_image.jpg" elevation="3">
-                    <div class="card-content">Hi! Hi!</div>
+                <pandora-card heading="Fantastic 4" image="http://movie.phinf.naver.net/20150805_130/1438738838024Xywoe_JPEG/movie_image.jpg" elevation="3">
+                    <div class="card-content">
+                        <div class="information">
+                            <span class="state is-progress">답변중</span>
+                            <span class="tags">
+                                <span>#빅뱅</span>
+                                <span>#뱅뱅</span>
+                                <span>#지드래곤</span>
+                            </span>
+                        </div>
+                        <p>
+                            나도 어디서 꿀리진 않어. 아직 쓸만한 걸 죽지않았어~
+                            너 하나 때문에 망가진 몸, 사라진 꿈, 불타는 맘~
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <paper-button>
+                            <iron-icon icon="icons:gesture"></iron-icon>
+                            <span>답변하기</span>
+                        </paper-button>
+                        <paper-button>
+                            <iron-icon icon="icons:gesture"></iron-icon>
+                            <span>답변하기</span>
+                        </paper-button>
+                    </div>
                 </pandora-card>
                 <pandora-card heading="Batman v Superman : Dawn Of Justice" image="http://ncc.phinf.naver.net/20150818_93/1439877006440I78Dr_GIF/4.gif" elevation="3">
                     <div class="card-content">Hi! Hi!</div>
