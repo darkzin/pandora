@@ -1,0 +1,66 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-image/iron-image.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<dom-module id="pandora-media-item">
+    <style>
+        :host {
+            position: relative;
+            display: inline-block;
+            height: 100%;
+            cursor: pointer;
+        }
+        img {
+            height: 100%;
+            width: auto;
+        }
+        paper-icon-button {
+            position: absolute;
+            top: 0.2rem;
+            right: 0.2rem;
+            padding: 0.1rem;
+            background-color: #ddd;
+            opacity: 0.7;
+            border: 2px solid white;
+            border-radius: 5px;
+            /*top: 1rem;
+            right: 1rem;*/
+        }
+    </style>
+    <template>
+        <!--<paper-button>
+            <iron-image height="[[height]]" width="[[width]]" src="[[thumbnail]]" sizing="contain"></iron-image>
+        </paper-button>-->
+        <img src="[[thumbnail]]">
+        <paper-icon-button icon="icons:clear" on-click="removeThisItem"></paper-icon-button>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'pandora-media-item',
+        properties: {
+            mediaType: String,
+            thumbnail: String,
+            data: String,
+            width: {
+                type: Number,
+                value: 200
+            },
+            height: {
+                type: Number,
+                value: 200
+            },
+        },
+        listeners: {
+        },
+        removeThisItem: function(){
+            console.log("remove this item.");
+            Polymer.dom(this.parentNode).removeChild(this);
+        },
+        created: function(){
+            console.log("pandora-media-item is created!");
+        },
+        executeData: function(){
+        }
+    });
+</script>
