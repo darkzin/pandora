@@ -1,0 +1,81 @@
+<dom-module id="pandora-tag-list">
+    <style>
+        :host {
+            display: flex;
+            justify-content: left;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .hash-tag {
+            display: inline-block;
+        }
+    </style>
+    <template>
+        <paper-icon-button icon="icons:add" hidden$="{{tagging}}" on-click="openInput"></paper-icon-button>
+        <paper-input id="tagInput" autofocus no-label-float hidden$="{{!tagging}}" on-keyup="checkKeycode" size="1">
+            <div prefix>#</div>
+        </paper-input>
+        <template is="dom-repeat" items="{{tags}}">
+            <div class="hash-tag">
+                <span class="hash">#</span>
+                <span class="tag">{{item}}</span>
+                <paper-icon-button icon="icons:clear" on-click="removeTag"></paper-icon-button>
+            </div>
+        </template>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-tag-list",
+        properties: {
+            tags: {
+                type: Array,
+                value: function(){ return []; }
+            },
+            tagging: {
+                type: Boolean,
+                value: false
+            }
+        },
+        openInput: function(){
+            this.toggleAttribute("tagging", true);
+            this.$.tagInput.$.input.focus();
+        },
+        checkKeycode: function(e){
+            console.log(e.keyCode);
+            switch(e.keyCode){
+                case 32:
+                    this._addTag(e.target.value);
+                    this._cleanInput(e.target);
+                    break;
+                case 13:
+                    this._closeInput(e.target);
+                    break;
+                default:
+                    this._resizeInput(e.target);
+                    break;
+            }
+        },
+        _cleanInput: function(inputElement){
+            inputElement.value = "";
+            inputElement.size = 1;
+        },
+        _closeInput: function(element){
+            this._addTag(element.value);
+            this.toggleAttribute("tagging");
+            this._cleanInput(element);
+        },
+        _resizeInput: function(inputElement){
+            inputElement.size = inputElement.value.length + 1;
+        },
+        _addTag: function(tag){
+            this.unshift('tags', tag);
+        },
+        removeTag: function(e){
+            var index = this.tags.indexOf(e.model.item);
+            if(index >= 0){
+                this.splice('tags', index, 1);
+            }
+        }
+    });
+</script>
