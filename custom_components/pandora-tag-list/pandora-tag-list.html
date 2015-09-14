@@ -10,6 +10,22 @@
             display: inline-block;
         }
     </style>
+    <style is="custom-style">
+        #tagInput {
+            --paper-input-container: {
+                background-color: #eee;
+            }
+            --paper-input-container-input: {
+                background-color: #eee;
+            }
+            --paper-input-container-underline-focus: {
+                display: none;
+            }
+            --paper-input-container-underline: {
+                display: none;
+            }
+        }
+    </style>
     <template>
         <paper-icon-button icon="icons:add" hidden$="{{tagging}}" on-click="openInput"></paper-icon-button>
         <paper-input id="tagInput" autofocus no-label-float hidden$="{{!tagging}}" on-keyup="checkKeycode" size="1">

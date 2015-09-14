@@ -1,0 +1,23 @@
+<dom-module id="pandora-tag-item">
+    <style>
+        #hash-tag {
+            padding: 0;
+            background-color: #ddd;
+            color: blue;
+        }
+    </style>
+    <template>
+        <span id="hash-tag">
+            <span id="hash">#</span>
+            <span id="tag">{{tagName}}</span>
+        </span>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-tag-item",
+        properties: {
+            tagName: String
+        }
+    })
+</script>
