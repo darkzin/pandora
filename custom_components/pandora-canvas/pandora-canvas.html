@@ -1,0 +1,230 @@
+<dom-module is="pandora-canvas">
+    <style>
+        :host {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+            list-bullet-type: none;
+        }
+        canvas#canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #note-controller, #select-color-buttons {
+            z-index: 2;
+        }
+        #note-controller {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+        }
+        #select-color-buttons {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+        }
+        #select-color-buttons ul {
+            margin-bottom: 3.5rem;
+        }
+        #select-color-buttons ul li {
+            margin-top: 0.5rem;
+        }
+        #select-color-buttons ul li:first-child {
+            margin-top: 0; 
+        }
+        #select-color-buttons paper-icon-button {
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #select-color-buttons paper-icon-button#currentColor {
+            border: 5px solid #123456;
+        }
+    </style>
+    <style is="custom-style">
+        #note-controller paper-icon-button {
+            --iron-icon-width: 2rem;
+            --iron-icon-height: 2rem;
+        }
+    </style>
+    <template>
+        <paper-icon-button id="back" icon="icons:arrow-back"></paper-icon-button>
+        <paper-icon-button id="save" icon="icons:save"></paper-icon-button>
+        <div id="note-controller">
+            <paper-icon-button icon="icons:chevron-left" on-tap="prevNote"></paper-icon-button>
+            <paper-icon-button icon="icons:note-add" on-tap="newNote"></paper-icon-button>
+            <paper-icon-button icon="icons:chevron-right" on-tap="nextNote"></paper-icon-button>
+        </div>
+        <div id="select-color-buttons">
+            <paper-icon-button id="currentColor" icon="editor:border-color" on-tap="openMenu"></paper-icon-button>
+            <iron-dropdown id="dropdown" horizontal-offset="5" vertical-align="bottom">
+                <ul class="dropdown-content">
+                    <template is="dom-repeat" items="{{collectColorNames(colors)}}">
+                        <li>
+                            <paper-icon-button color$="[[item]]" on-tap="selectColor" icon="editor:border-color"></paper-icon-button>
+                        </li>
+                    </template>
+                </ul>
+            </iron-dropdown>
+        </div>
+        <canvas id="canvas" on-track="handleTrack"></canvas>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-canvas",
+        properties: {
+            colors: {
+                type: Object,
+                value: function(){
+                    return {
+                        black: "#000000",
+                        red: "#ff0000",
+                        green: "#00ff00",
+                        blue: "#0000ff",
+                        white: "#ffffff"
+                    };
+                }
+            },
+            context: {
+                type: Object,
+                value: function(){
+                    return this.$.canvas.getContext("2d");
+                }
+            },
+            currentColor: {
+                type: String,
+                value: "#000000",
+                observer: "_currentColorChanged"
+            },
+            isDrawing: {
+                type: Boolean,
+                value: false
+            },
+            pathes: {
+                type: Array,
+                value: function(){
+                    var path = new Path2D();
+                    return [path];
+                }
+            },
+            currentPathIndex: {
+                type: Number,
+                value: 0,
+                observer: "_currentPathIndexChanged",
+            },
+            currentPath: {
+                type: Object,
+                computed: '_computeCurrentPath(pathes, currentPathIndex)',
+            },
+        },
+
+        /* life cycle. */
+        ready: function(){
+            this.currentPath = this.pathes[0];
+        },
+        attached: function(){
+            this._setColorForSelectColorButtons();
+            this._setCanvasSize(this.clientWidth, this.clientHeight);
+        },
+        /* public. */
+        selectColor: function(e){
+            var button = e.target.parentElement;
+            var colorName = button.getAttribute('color');
+            var colorCode = this.colors[colorName];
+            this.currentColor = colorCode;
+            this.$.dropdown.close();
+        },
+        openMenu: function(e){
+            this.$.dropdown.open();
+        },
+        handleTrack: function(e){
+            switch(e.detail.state) {
+                case 'start':
+                    if(this.isDrawing === false){
+                        this.isDrawing = true;
+                        this.currentPath.moveTo(e.detail.x, e.detail.y);
+                    };
+                break;
+            case 'track':
+                if(this.isDrawing === true){
+                    this.currentPath.lineTo(e.detail.x, e.detail.y);
+                    this.context.stroke(this.currentPath);
+                };
+                break;
+            case 'end':
+                if(this.isDrawing === true){
+                    this.isDrawing = false;
+                };
+                break;
+            };
+        },
+        newNote: function(){
+            this.push('pathes', new Path2D());
+            this.currentPathIndex = this.currentPathIndex + 1;
+        },
+        prevNote: function(){
+            if (this.currentPathIndex >= 0){
+                this.currentPathIndex = this.currentPathIndex - 1;
+            }
+        },
+        nextNote: function(){
+            if (this.currentPathIndex < this.pathes.length){
+                this.currentPathIndex = this.currentPathIndex + 1;
+            }
+        },
+        collectColorNames: function(colors){
+            return Object.keys(colors);
+        },
+
+        /* private. */
+        _computeCurrentPath: function(pathes, index){
+            return this.pathes[index];
+        },
+        _currentPathIndexChanged: function(newValue, oldValue){
+            this.context.clearRect(0, 0, this.clientWidth, this.clientHeight);
+            this.context.stroke(this.currentPath);
+        },
+        _setColorForSelectColorButtons: function(){
+            var buttonsOfSelectColor = this._getNodeList("#select-color-buttons li > paper-icon-button");
+            for(var i = 0; i < buttonsOfSelectColor.length; i++){
+                var button = buttonsOfSelectColor[i];
+                var colorName = button.getAttribute('color');
+                var colorCode = this.colors[colorName];
+                this._changeColor(button, colorCode);
+            }; 
+        },
+        _getNodeList: function(cssSelector){
+            return this.querySelectorAll(cssSelector);
+        },
+        _changeColor: function(target, colorCode){
+            target.style.color = colorCode;
+        },
+        _changeBorderColor: function(target, colorCode){
+            target.style.borderColor = colorCode;
+        },
+        _setCanvasSize: function(width, height){
+            this.$.canvas.width = width;
+            this.$.canvas.height = height;
+        },
+
+        /* observers. */
+        _currentColorChanged: function(newValue, oldValue){
+            this._changeColor(this.$.currentColor, newValue);
+            this._changeBorderColor(this.$.currentColor, newValue);
+            console.log(this.context);
+            if(!!this.context){
+                this.context.strokeStyle = newValue;
+            };
+        }
+    });
+</script>
