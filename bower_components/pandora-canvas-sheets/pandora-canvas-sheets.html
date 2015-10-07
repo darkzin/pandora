@@ -1,0 +1,110 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<dom-module is="pandora-canvas-sheets">
+    <style>
+    </style>
+    <style is="custom-style">
+        paper-icon-button {
+            --iron-icon-width: 2rem;
+            --iron-icon-height: 2rem;
+        }
+    </style>
+    <template>
+        <paper-icon-button id="prevNoteButton" icon="icons:chevron-left" on-tap="prevSheet"></paper-icon-button>
+        <paper-icon-button id="newNoteButton" icon="icons:note-add" on-tap="newSheet"></paper-icon-button>
+        <paper-icon-button id="nextNoteButton" icon="icons:chevron-right" on-tap="nextSheet"></paper-icon-button>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-canvas-sheets",
+        properties: {
+            _sheets: {
+                type: Array,
+                value: function(){
+                    return [];
+                },
+            },
+            currentSheetIndex: {
+                type: Number,
+                value: null,
+                notify: true
+            },
+            _currentPath: Object
+        },
+
+        /* life cycle. */
+        ready: function(){
+        },
+        attached: function(){
+        },
+
+        /* public. */
+        newSheet: function(){
+            this.push('_sheets', []);
+
+            if(this.currentSheetIndex == null){
+                this.currentSheetIndex = 0;
+            }
+            else{
+                this.currentSheetIndex = this._sheets.length - 1;
+            }
+            return this.getCurrentSheet();
+        },
+        prevSheet: function(){
+            if (this._sheets.length > 0 && this.currentSheetIndex > 0){
+                this.currentSheetIndex -= 1;
+                return this.getCurrentSheet();
+            }
+        },
+        nextSheet: function(){
+            if (this.currentSheetIndex < (this._sheets.length - 1)){
+                this.currentSheetIndex += 1;
+                return this.getCurrentSheet();
+            }
+        },
+        getSheetByIndex: function(index){
+            var sheetSize = this._sheets.length;
+            if(sheetSize > 0 && index >= 0 && index < sheetSize){
+                return this.sheets[index];
+            }
+            else{
+                return null;
+            }
+        },
+        getAllSheets: function(){
+            return this._sheets;
+        },
+        clearSheets: function(){
+            this._sheets = [];
+            this.currentSheetIndex = null;
+        },
+        startDrawing: function(colorCode, x, y){
+            this._currentPath = new Path2D();
+            this._currentPath.colorCode = colorCode;
+            this._currentPath.moveTo(x, y);
+        },
+
+        drawLineTo: function(x, y){
+            this._currentPath.lineTo(x, y);
+        },
+
+        endDrawing: function(){
+            var currentSheet = this.getCurrentSheet();
+            currentSheet.push(this._currentPath);
+            this._currentPath = null;
+        },
+        /* private. */
+        getCurrentSheet: function(){
+            var index = this.currentSheetIndex;
+            if(index >= 0 && index < this._sheets.length){
+                return this._sheets[index];
+            }
+            else{
+                return null;
+            }
+        }
+        /* observers. */
+    });
+</script>

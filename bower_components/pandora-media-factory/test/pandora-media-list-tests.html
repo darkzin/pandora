@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../pandora-media-list.html">
+  </head>
+  <body>
+    <pandora-media-list id="fixture">
+      <pandora-media-item media-type="image" height="100" width="100"></pandora-media-item>
+      <pandora-media-item media-type="image" height="100" width="100"></pandora-media-item>
+      <pandora-media-item media-type="image" height="100" width="100"></pandora-media-item>
+    </pandora-media-list>
+    <script>
+      suite("pandora-media-list", function(){
+        var list, mediaItem;
+        setup(function(){
+          list = document.getElementById("fixture");
+          mediaItem = {
+            mediaType: "image",
+            thumbnailSrc: "thumbnail.jpg",
+            dataSrc: "data.jpg",
+            play: function(){}
+          };
+        });
+
+        test("add item by public API.", function(){
+          assert.lengthOf(list.items, 3, "media list should have three child nodes at first.");
+          assert.equal(Polymer.dom(list).querySelectorAll("pandora-media-item").length, 3, "media list should have three item at first.");
+          list.addItem(mediaItem);
+          assert.lengthOf(list.items, 4, "media list should have four item.");
+          assert.equal(Polymer.dom(list).querySelectorAll("pandora-media-item").length, 4, "media list should have four child.");
+        });
+
+        test("remove item when user click the remove button on that item.", function(){
+          mediaItem.$.removeButton.fire("click");
+          assert.lengthOf(list.items, 3, "media list should have three item cuz one item was removed.");
+          assert.equal(list.childNodes.length, 3, "media list should have three child cuz one item was removed.");
+        });
+
+        test("wrap items for sending to server.", function(){
+        });
+      });
+    </script>
+  </body>
+</html>

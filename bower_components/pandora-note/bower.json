@@ -1,0 +1,23 @@
+{
+  "name": "pandora-canvas",
+  "version": "0.0.1",
+  "homepage": "https://github.com/darkzin/pandora",
+  "authors": [
+    "darkzin <tony@skyseed.me>"
+  ],
+  "description": "canvas for pandora app",
+  "main": "pandora-canvas.html",
+  "keywords": [
+    "web",
+    "canvas",
+    "polymer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

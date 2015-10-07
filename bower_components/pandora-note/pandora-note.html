@@ -1,0 +1,162 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../pandora-canvas/pandora-canvas.html">
+<link rel="import" href="../pandora-canvas-sheets/pandora-canvas-sheets.html">
+<link rel="import" href="../pandora-color-picker/pandora-color-picker.html">
+
+<dom-module is="pandora-note">
+    <style>
+        :host {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        pandora-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+        }
+        paper-icon-button#backButton {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+        }
+        paper-icon-button#saveButton {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        pandora-canvas-sheets {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+        }
+        pandora-color-picker {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+        }
+    </style>
+    <style is="custom-style">
+        paper-icon-button#backButton, paper-icon-button#saveButton {
+            --iron-icon-width: 2rem;
+            --iron-icon-height: 2rem;
+        }
+    </style>
+    <template>
+      <pandora-canvas id="canvas" width="[[width]]" height="[[height]]"></pandora-canvas>
+      <paper-icon-button id="backButton" icon="icons:arrow-back" on-tap="close"></paper-icon-button>
+      <paper-icon-button id="saveButton" icon="icons:save" on-tap="saveCanvas"></paper-icon-button>
+      <pandora-canvas-sheets id="canvasSheets"></pandora-canvas-sheets>
+      <pandora-color-picker id="colorPicker"></pandora-color-picker>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-note",
+
+        properties: {
+            width: Number,
+            height: Number,
+        },
+
+        listeners: {
+            'track': "_handleTrack",
+            'canvasSheets.current-sheet-index-changed': "_sheetChanged",
+        },
+
+        /* life cycle. */
+        ready: function(){
+        },
+        attached: function(){
+            this.width = this.clientWidth;
+            this.height = this.clientHeight;
+        },
+
+        /* public. */
+        open: function(){
+          this.hidden = false;
+          this.$.canvasSheets.newSheet();
+        },
+        close: function(){
+          this.hidden = true;
+          this.$.canvas.clearCanvas();
+          this.$.canvasSheets.clearSheets();
+        },
+        saveCanvas: function(){
+            var allSheets = this.$.canvasSheets.getAllSheets();
+            var length = allSheets.length;
+            var mediaSources = [];
+
+            for(var i = 0; i < length; i++){
+                mediaSources.push(this._getMediaSourceFromCanvas(allSheets[i]));
+            };
+            this.fire("media-sources-created", {mediaType: "drawing", mediaSources: mediaSources});
+        },
+
+        /* event listener. */
+        _handleTrack: function(e){
+            switch(e.detail.state) {
+                case 'start':
+                this._trackStart(e.detail.x, e.detail.y);
+                break;
+            case 'track':
+                this._tracking(e.detail.x, e.detail.y);
+                break;
+            case 'end':
+                this._trackEnd(e.detail.x, e.detail.y);
+                break;
+            };
+        },
+        _sheetChanged: function(e){
+            this.$.canvas.clearCanvas();
+            var currentSheet = this.$.canvasSheets.getCurrentSheet();
+            if(currentSheet){
+                this.$.canvas.drawStrokes(currentSheet);
+            };
+        },
+
+        /* private. */
+        _getMediaSourceFromCanvas: function(strokes){
+            var mediaData = {}
+            mediaData.thumbnailSrc = this.$.canvas.getThumbnailImage(strokes);
+            mediaData.dataSrc = this.$.canvas.getImage(strokes); 
+            return mediaData;
+        },
+        _makeMediaItem: function(sheet){
+            var mediaData = this._getMediaSourceFromCanvas(sheet);
+
+            mediaItem.mediaType = "drawing";
+            mediaItem.thumbnailSrc = mediaData.thumbnailSrc;
+            mediaItem.dataSrc = mediaData.dataSrc;
+
+            return mediaItem;
+        },
+        /*_getMediaPlayer: function(){
+            return function(){
+                console.log(this + "is going to play data.");
+            };
+        },*/
+        _trackStart: function(x, y){
+            this.$.canvas.startDrawing(colorPicker.currentColorCode, x, y);
+            this.$.canvasSheets.startDrawing(colorPicker.currentColorCode, x, y);
+            
+        },
+        _tracking: function(x, y){
+            this.$.canvas.drawLineTo(x, y);
+            this.$.canvasSheets.drawLineTo(x, y);
+        },
+        _trackEnd: function(x, y){
+            this.$.canvas.endDrawing();
+            this.$.canvasSheets.endDrawing();
+        },
+        /* observers. */
+    });
+</script>

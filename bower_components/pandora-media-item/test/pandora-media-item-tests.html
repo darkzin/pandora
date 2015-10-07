@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../pandora-media-item.html">
+  </head>
+  <body>
+    <pandora-media-item id="fixture"></pandora-media-item>
+    <script>
+      suite('pandora-media-item', function(){
+        var mediaItem = null, removeButton = null;
+
+        setup(function(){
+          mediaItem = document.createElement("pandora-media-item");
+          removeButton = mediaItem.$.removeButton;
+        });
+
+        test("should emit 'media-item-removed' when user click removeButton.", function(done){
+          mediaItem.addEventListener('media-item-removed', function(e){
+            assert.equal(e.target, mediaItem);
+            done();
+          });
+          removeButton.fire("click");
+        });
+
+        test("should play media when user click this.", function(){
+          var spy = sinon.spy();
+          mediaItem.play = spy;
+          mediaItem.play();
+          assert.isTrue(spy.called);
+        });
+      });
+    </script>
+  </body>
+</html>

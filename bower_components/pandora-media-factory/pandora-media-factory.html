@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../pandora-media-item/pandora-media-item.html">
+
+<script>
+  Polymer({
+    is: "pandora-media-factory",
+    /* life cycle. */
+    /* public. */
+    makeMediaItem: function(mediaType, mediaSource){
+      var mediaItem = new PandoraMediaItem();
+      switch(mediaType){
+        case "image":
+          mediaItem.play = this._openImageViewerFunction();
+          break;
+        case "voice":
+          mediaItem.play = this._playVoiceRecordingFunction();
+          break;
+        case "drawing":
+          mediaItem.thumbnailSrc = mediaSource.thumbnailSrc;
+          mediaItem.sourceSrc = mediaSource.sourceSrc;
+          mediaItem.play = this._playDrawingFunction();
+          break;
+      }
+      return mediaItem;
+    },
+    /* private. */
+    _openImageViewerFunction: function(){
+    },
+    _playVoiceRecordingFunction: function(){
+    },
+    _playDrawingFunction: function(){
+    },
+  });
+</script>

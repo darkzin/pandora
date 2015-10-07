@@ -1,0 +1,23 @@
+{
+  "name": "pandora-color-picker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/darkzin/pandora",
+  "authors": [
+    "darkzin <tony@skyseed.me>"
+  ],
+  "description": "color picker for pandora-note",
+  "main": "pandora-color-picker.html",
+  "keywords": [
+    "web",
+    "canvas",
+    "polymer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

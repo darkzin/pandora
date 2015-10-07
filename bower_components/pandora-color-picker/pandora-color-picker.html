@@ -1,0 +1,126 @@
+
+<link rel="import" href="../iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<dom-module is="pandora-color-picker">
+    <style>
+        ul {
+            margin-bottom: 3.5rem;
+            padding: 0;
+            list-style-type: none;
+        }
+        ul li {
+            margin-top: 0.5rem;
+        }
+        ul li:first-child {
+            margin-top: 0; 
+        }
+        paper-icon-button {
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        paper-icon-button#selectColorButton {
+            border: 5px solid #123456;
+        }
+    </style>
+    <style is="custom-style">
+        #note-controller paper-icon-button {
+            --iron-icon-width: 2rem;
+            --iron-icon-height: 2rem;
+        }
+    </style>
+    <template>
+        <paper-icon-button id="selectColorButton" icon="editor:border-color" on-tap="openMenu"></paper-icon-button>
+        <iron-dropdown id="dropdown" horizontal-offset="5" vertical-align="bottom">
+            <ul class="dropdown-content">
+                <template is="dom-repeat" items="{{colorNames}}">
+                    <li>
+                        <paper-icon-button color$="[[item]]" on-tap="_colorIsSelected" icon="editor:border-color"></paper-icon-button>
+                    </li>
+                </template>
+            </ul>
+        </iron-dropdown>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-color-picker",
+        properties: {
+            colors: {
+                type: Object,
+                value: function(){
+                    return {
+                        black: "#000000",
+                        red: "#ff0000",
+                        green: "#00ff00",
+                        blue: "#0000ff",
+                        white: "#ffffff"
+                    };
+                }
+            },
+            currentColorCode: {
+                type: String,
+                value: "#000000",
+                observer: "_currentColorCodeChanged",
+                notify: true
+            },
+            colorNames: {
+                type: String,
+                computed: "_collectColorNames(colors)",
+            },
+        },
+
+        /* life cycle. */
+        ready: function(){
+        },
+        attached: function(){
+            this._setColorForSelectColorButtons();
+        },
+
+        /* public. */
+        openMenu: function(e){
+            this.$.dropdown.open();
+        },
+
+        /* private. */
+        _collectColorNames: function(colors){
+            return Object.keys(colors);
+        },
+        _setColorForSelectColorButtons: function(){
+            var buttonsOfSelectColor = this.querySelectorAll("ul.dropdown-content li > paper-icon-button");
+            for(var i = 0; i < buttonsOfSelectColor.length; i++){
+                var button = buttonsOfSelectColor[i];
+                var colorName = button.getAttribute('color');
+                var colorCode = this.colors[colorName];
+                this._changeColor(button, colorCode);
+            }; 
+        },
+        _changeColor: function(target, colorCode){
+            target.style.color = colorCode;
+        },
+        _changeBorderColor: function(target, colorCode){
+            target.style.borderColor = colorCode;
+        },
+        _colorIsSelected: function(e){
+            var button = this._findParent(e.target, "paper-icon-button");
+            var colorName = button.getAttribute('color');
+            var colorCode = this.colors[colorName];
+            this.currentColorCode = colorCode;
+            this.$.dropdown.close();
+        },
+        _findParent: function(element, parentNodeName){
+            if(element.nodeName.toLowerCase() == parentNodeName){
+                return element;
+            }
+            else{
+                return this._findParent(element.parentNode, parentNodeName);
+            }
+        },
+        /* observers. */
+        _currentColorCodeChanged: function(newValue, oldValue){
+            this._changeColor(this.$.selectColorButton, newValue);
+            this._changeBorderColor(this.$.selectColorButton, newValue);
+        }
+    });
+</script>

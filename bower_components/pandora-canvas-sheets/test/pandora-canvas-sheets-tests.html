@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../../web-component-tester/browser.js"></script>
+        <link rel="import" href="../pandora-canvas-sheets.html">
+    </head>
+    <body>
+        <pandora-canvas-sheets></pandora-canvas-sheets>
+        <script>
+            suite("pandora-canvas-sheets", function(){
+                var canvasSheets, newNoteButton, prevNoteButton, nextNoteButton = null;
+                
+                setup(function(){
+                    canvasSheets = document.createElement("pandora-canvas-sheets");
+                    newNoteButton = canvasSheets.querySelector("#newNoteButton");
+                    prevNoteButton = canvasSheets.querySelector("#prevNoteButton");
+                    nextNoteButton = canvasSheets.querySelector("#nextNoteButton");
+                });
+
+                test("should have no sheet when initialize element.", function(){
+                    assert.lengthOf(canvasSheets._sheets, 0, "count of sheets should be one at first time.");
+                    assert.isNull(canvasSheets._currentNoteIndex, "index should be null when there is no note.");
+                });
+
+                test("should controll sheet position by canvasSheets UI.", function(){
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    assert.equal(canvasSheets._currentNoteIndex, 2, "index should be two because we push the button three times.");
+                    assert.lengthOf(canvasSheets.getAllSheets(), 3, "size of sheets should be three."); 
+                    prevNoteButton.fire("click");
+                    prevNoteButton.fire("click");
+                    assert.equal(canvasSheets._currentNoteIndex, 0);
+                    assert.lengthOf(canvasSheets.getAllSheets(), 3); 
+                    nextNoteButton.fire("click");
+                    assert.equal(canvasSheets._currentNoteIndex, 1);
+                    assert.lengthOf(canvasSheets.getAllSheets(), 3); 
+                });
+
+                test("should return current sheet represent by index.", function(){
+                    assert.isNull(canvasSheets._currentNoteIndex);
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    assert.equal(canvasSheets._currentNoteIndex, 1, "two time click, so index should be 1.");
+                    assert.lengthOf(canvasSheets.getAllSheets(), 2); 
+                    prevNoteButton.fire("click");
+                    assert.equal(canvasSheets._currentNoteIndex, 0);
+                    assert.equal(canvasSheets._getCurrentSheet(), canvasSheets.getNoteByIndex(0));
+                });
+
+                test("when start drawing, current path is exist and should have colorcode.", function(){
+                    assert.isNull(canvasSheets._currentPath);
+                    canvasSheets.startDrawing("#f0f0f0", 10, 20);
+                    assert.isObject(canvasSheets._currentPath);
+                    assert.equal(canvasSheets._currentPath.colorCode, "#f0f0f0");
+                })
+
+                test("when draw line, currentPath line to points.", function(){
+                    canvasSheets.drawLineTo(30 ,40);
+                    console.log("can not test this method.");
+                });
+
+                test("when end drawing, current sheet should increase size of strokes and currentPath should be null.", function(){
+                    canvasSheets.startDrawing("#f0f0f0", 10, 20);
+                    canvasSheets.drawLineTo(30 ,40);
+                    assert.isObject(canvasSheets._currentPath);
+                    assert.lengthOf(canvasSheets._getCurrentSheet(), 0);
+                    canvasSheets.endDrawing();
+                    assert.isNull(canvasSheets._currentPath);
+                    assert.lengthOf(canvasSheets._getCurrentSheet(), 1);
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../../web-component-tester/browser.js"></script>
+        <link rel="import" href="../pandora-note.html">
+    </head>
+    <body>
+      <pandora-note id="fixture"></pandora-note>
+        <script>
+          suite("pandora-note", function(){
+            var note, canvasSheets;
+
+            setup(function(){
+              note = document.getElementById("fixture");
+              canvasSheets = note.$.canvasSheets;
+            });
+
+            test("should return to page when user click the back button.", function(){
+              var backButton = note.$.backButton;
+              backButton.fire("click");
+              assert.isFalse(note.visible);
+            });
+
+            test("should fire 'media-item-created' event when user click the save button and event object should have mediaItems.", function(done){
+                var saveButton = note.$.saveButton;
+
+                note.addEventListener("media-sources-created", function(e){
+                    assert.isArray(e.detail.mediaSources);
+                    done();
+                });
+                saveButton.fire("click");
+            });
+          });
+        </script>
+    </body>
+</html>

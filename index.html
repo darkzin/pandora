@@ -19,17 +19,18 @@
     </head>
     <body class="fullbleed layout vertical">
         <iron-pages selected="1">
-            <questions-index-page></questions-index-page>
-            <new-question-page></new-question-page>
+            <questions-index-page class="page"></questions-index-page>
+            <new-question-page class="page"></new-question-page>
         </iron-pages>
         <script>
             document.addEventListener("WebComponentsReady", function(){
-                var panel = Polymer.Base.$$("paper-scroll-header-panel");
-                panel.addEventListener("paper-header-transform", function(){
-                    console.log("hoho");
-                    children = Polymer.dom(panel).childNodes;
-                    console.log(children);
-                });
+                var ironPage = document.querySelector("iron-pages");
+                var pages = document.querySelectorAll(".page");
+                var length = pages.length;
+
+                for(var i = 0; i < length; i++){
+                    pages[i].pageSelector = ironPage;
+                };
             });
         </script>
     </body>

@@ -1,0 +1,78 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../pandora-media-item/pandora-media-item.html">
+
+<dom-module id="pandora-media-list">
+  <style>
+  :host {
+    display: block;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+  }
+  .media-item {
+    margin-right: 1rem;
+  }
+  .media-item:first-child {
+    margin-right: 0;
+  }
+  .media-item {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    cursor: pointer;
+  }
+  .media-item img {
+    height: 100%;
+    width: auto;
+  }
+  .media-item paper-icon-button {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    padding: 0.1rem;
+    background-color: #ddd;
+    opacity: 0.7;
+    border: 2px solid white;
+    border-radius: 5px;
+    /*top: 1rem;
+    right: 1rem;*/
+  }
+  </style>
+  <template>
+    <template is="dom-repeat" items="{{items}}">
+      <div class="media-item">
+        <img src="[[item.thumbnailSrc]]">
+        <paper-icon-button id="removeButton" icon="icons:clear" on-click="removeItem"></paper-econ-button>
+      </div>
+    </template>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: "pandora-media-list",
+    properties: {
+      items: {
+        type: Array,
+        value: function(){
+          return [];
+        },
+      },
+    },
+    /* life cycle. */
+    attached: function(){
+    },
+    /* public. */
+    addItem: function(mediaItem){
+      var that = this;
+      mediaItem.addEventListener("media-item-removed", function(e){
+        var index = that.items.indexOf(e.target);
+        that.splice('items', index, 1);
+      });
+      this.push("items", mediaItem);
+    },
+    removeItem: function(e){
+      var index = this.items.indexOf(e.model.item);
+      this.splice('items', index, 1);
+    },
+  });
+</script>

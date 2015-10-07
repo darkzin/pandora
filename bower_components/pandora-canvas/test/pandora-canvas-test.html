@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../pandora-canvas.html">
+  </head>
+  <body>
+    <script>
+      suite("pandora-canvas", function(){
+        var canvas;
+        setup(function(){
+          canvas = document.createElement("pandora-canvas");
+          document.appendChild(canvas);
+        });
+
+        teardown(function(){
+          document.body.removeChild(canvas);
+        });
+
+        test("if canvas size attribute is set, property is also set.", function(){
+          canvas.setAttribute("width", 300);
+          canvas.setAttribute("height", 400);
+          assert.equal(canvas.width, 300, "canvas size should be 300, as attribute value.");
+          assert.equal(canvas.height, 400, "canvas size should be 400, as attribute value.");
+        });
+
+        test("if canvas size attribute is set, actual element size is also set.", function(){
+          canvas.setAttribute("width", 300);
+          canvas.setAttribute("height", 400);
+          assert.equal(canvas.clientWidth, 300, "canvas actual size should be 300, as attribute value.");
+          assert.equal(canvas.clientHeight, 400, "canvas actual size should be 400, as attribute value.");
+        });
+
+        test("do not startDrawing if isDrawing is true.", function(){
+          console.log("cannot test this because context do not have context attribute.");
+          console.log("so raise error if we need.");
+        });
+
+        test("do not drawLineTo if isDrawing is false.", function(){
+          console.log("cannot test this because context do not have context attribute.");
+          console.log("so raise error if we need.");
+        });
+
+        test("do not endDrawing if isDrawing is false", function(){
+          console.log("cannot test this because context do not have context attribute.");
+          console.log("so raise error if we need.");
+        });
+
+        test("draw strokes to canvas by calling drawStrokes with strokes.", function(){
+          var path1 = new Path2D(), path2 = new Path2D();
+          path1.color = "#000000";
+          path1.moveTo(1, 1);
+          path1.lineTo(10, 10);
+          path1.lineTo(20, 20);
+          path2.color = "#ff0000";
+          path2.moveTo(50, 50);
+          path2.lineTo(40, 40);
+          path2.lineTo(30, 30);
+          var strokes = [path1, path2];
+          canvas.drawStrokes(strokes);
+          console.log("check canvas by eye of sight.");
+        });
+
+        test("get thumbnail image by calling getThumbnailImage.", function(){
+          var path1 = new Path2D(), path2 = new Path2D();
+          path1.color = "#000000";
+          path1.moveTo(1, 1);
+          path1.lineTo(10, 10);
+          path1.lineTo(20, 20);
+          path2.color = "#ff0000";
+          path2.moveTo(50, 50);
+          path2.lineTo(40, 40);
+          path2.lineTo(30, 30);
+          var strokes = [path1, path2];
+          image = canvas.getThumbnailImage(strokes);
+          console.log("check thumbnail image by eye of sight.");
+        });
+
+        test("get image by calling getImage.", function(){
+          var path1 = new Path2D(), path2 = new Path2D();
+          path1.color = "#000000";
+          path1.moveTo(1, 1);
+          path1.lineTo(10, 10);
+          path1.lineTo(20, 20);
+          path2.color = "#ff0000";
+          path2.moveTo(50, 50);
+          path2.lineTo(40, 40);
+          path2.lineTo(30, 30);
+          var strokes = [path1, path2];
+          image = canvas.getImage(strokes);
+          console.log("check image by eye of sight.");
+        });
+      });
+    </script>
+  </body>
+</html>

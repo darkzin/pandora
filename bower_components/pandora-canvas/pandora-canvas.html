@@ -1,0 +1,108 @@
+<dom-module is="pandora-canvas">
+    <style>
+        :host {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+        }
+        canvas#canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+    <template>
+        <canvas id="canvas" width=[[width]] height=[[height]]></canvas>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: "pandora-canvas",
+        properties: {
+            width: {
+                type: Number,
+                reflectToAttribute: true
+            },
+            height: {
+                type: Number,
+                reflectToAttribute: true
+            },
+            /*colorCode: {
+                type: String,
+                value: "#000000",
+                observer: "_colorCodeChanged",
+                reflectToAttribute: true
+            },*/
+            _context: {
+                type: Object,
+                value: function(){
+                    return this.$.canvas.getContext("2d");
+                }
+            },
+            _isDrawing: {
+                type: Boolean,
+                value: false
+            },
+        },
+
+        /* life cycle. */
+        ready: function(){
+        },
+        attached: function(){
+        },
+        /* public. */
+        startDrawing: function(colorCode, x, y){
+            if(!this._isDrawing){
+                this._context.beginPath();
+                this._context.strokeStyle = colorCode;
+                this._context.moveTo(x, y);
+                this._isDrawing = true;
+            }
+        },
+        drawLineTo: function(x, y){
+            if(this._isDrawing){
+                this._context.lineTo(x, y);
+                this._context.stroke();
+            }
+        },
+        endDrawing: function(){
+            if(this._isDrawing){
+                this._isDrawing = false;
+                this._context.closePath();
+            };
+        },
+        clearCanvas: function(){
+            this._context.clearRect(0, 0, this.width, this.height);
+        },
+        drawStrokes: function(strokes){
+            var length = strokes.length;
+            for(var i = 0; i < length; i++){
+                this._drawStroke(strokes[i]);
+            }
+        },
+        getThumbnailImage: function(strokes){
+            this.clearCanvas();
+            this.drawStrokes(strokes);
+            return this.$.canvas.toDataURL();
+        },
+        getImage: function(strokes){
+            this.clearCanvas();
+            this.drawStrokes(strokes);
+            return this.$.canvas.toDataURL();
+        },
+        /* private. */
+        _colorCodeChanged: function(newValue, oldValue){
+            this.async(function(){
+                this._context.strokeStyle = newValue;
+            });
+        },
+        _drawStroke: function(stroke){
+            this._context.strokeStyle = stroke.colorCode;
+            this._context.stroke(stroke);
+        },
+        /* observers. */
+    });
+</script>

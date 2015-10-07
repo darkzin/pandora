@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../../web-component-tester/browser.js"></script>
+        <link rel="import" href="../new-question-page.html">
+    </head>
+    <body>
+      <new-question-page id="fixture"></new-question-page>
+        <script>
+          suite("new question page", function(){
+              var page;
+
+            setup(function(){
+              page = document.getElementById("fixture");
+            });
+
+            test("back to questions page when a user click the back button", function(){
+            });
+
+            test("send question to server when a user click the save button", function(){
+                var saveButton = page.$.saveButton;
+                saveButton.fire("click");
+            });
+
+            test("open the camera when a user click the camera button.", function(){
+            });
+
+            test("open the photo library when a user click the photo library button.", function(){
+            });
+
+            test("open pandora-note when a user click the drawing button.", function(){
+            });
+
+            test("open record program when a user click the voice recording button.", function(){
+            });
+
+          });
+        </script>
+    </body>
+</html>

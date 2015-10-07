@@ -1,3 +1,6 @@
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+
 <dom-module id="pandora-tag-list">
     <style>
         :host {
@@ -28,7 +31,7 @@
     </style>
     <template>
         <paper-icon-button icon="icons:add" hidden$="{{tagging}}" on-click="openInput"></paper-icon-button>
-        <paper-input id="tagInput" autofocus no-label-float hidden$="{{!tagging}}" on-keyup="checkKeycode" size="1">
+        <paper-input id="tagInput" autofocus no-label-float hidden$="{{!tagging}}" on-keyup="_checkKeycode" size="1">
             <div prefix>#</div>
         </paper-input>
         <template is="dom-repeat" items="{{tags}}">
@@ -57,8 +60,13 @@
             this.toggleAttribute("tagging", true);
             this.$.tagInput.$.input.focus();
         },
-        checkKeycode: function(e){
-            console.log(e.keyCode);
+        removeTag: function(e){
+            var index = this.tags.indexOf(e.model.item);
+            if(index >= 0){
+                this.splice('tags', index, 1);
+            }
+        },
+        _checkKeycode: function(e){
             switch(e.keyCode){
                 case 32:
                     this._addTag(e.target.value);
@@ -87,11 +95,5 @@
         _addTag: function(tag){
             this.unshift('tags', tag);
         },
-        removeTag: function(e){
-            var index = this.tags.indexOf(e.model.item);
-            if(index >= 0){
-                this.splice('tags', index, 1);
-            }
-        }
     });
 </script>

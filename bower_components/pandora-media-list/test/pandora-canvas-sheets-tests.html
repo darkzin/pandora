@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../../web-component-tester/browser.js"></script>
+        <link rel="import" href="../pandora-canvas-sheets.html">
+    </head>
+    <body>
+        <pandora-canvas-sheets></pandora-canvas-sheets>
+        <script>
+            suite("pandora-canvas-sheets", function(){
+                var controller, newNoteButton, prevNoteButton, nextNoteButton = null;
+                setup(function(){
+                    controller = document.createElement("pandora-note-controller");
+                    newNoteButton = controller.querySelector("#newNoteButton");
+                    prevNoteButton = controller.querySelector("#prevNoteButton");
+                    nextNoteButton = controller.querySelector("#nextNoteButton");
+                });
+
+                test("should have no note when initialize element.", function(){
+                    assert.lengthOf(controller.notes, 0, "count of notes should be one at first time.");
+                    assert.isNull(controller.currentNoteIndex, "index should be null when there is no note.");
+                });
+                test("should controll note position by controller UI.", function(){
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    assert.equal(controller.currentNoteIndex, 2, "index should be two because we push the button three times.");
+                    assert.lengthOf(controller.notes, 3, "size of notes should be three."); 
+                    prevNoteButton.fire("click");
+                    prevNoteButton.fire("click");
+                    assert.equal(controller.currentNoteIndex, 0);
+                    assert.lengthOf(controller.notes, 3); 
+                    nextNoteButton.fire("click");
+                    assert.equal(controller.currentNoteIndex, 1);
+                    assert.lengthOf(controller.notes, 3); 
+                });
+                test("should return currentNote represent by index.", function(){
+                    assert.isNull(controller.currentNoteIndex);
+                    newNoteButton.fire("click");
+                    newNoteButton.fire("click");
+                    assert.equal(controller.currentNoteIndex, 1, "two time click, so index should be 1.");
+                    assert.lengthOf(controller.notes, 2); 
+                    prevNoteButton.fire("click");
+                    assert.equal(controller.currentNoteIndex, 0);
+                    assert.equal(controller.currentNote, controller.getNoteByIndex(0));
+                });
+                test("could add path to notes and retrive.", function(){
+                    var path = document.createElement("pandora-canvas-path");
+                    newNoteButton.fire("click");
+                    controller.addPathToCurrentNote(path);
+                    assert.lengthOf(controller.currentNote, 1);
+                    assert.equal(path, controller.currentNote[0]);
+                });
+            });
+        </script>
+    </body>
+</html>

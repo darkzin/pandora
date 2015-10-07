@@ -1,0 +1,123 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../pandora-media-list/pandora-media-list.html">
+<link rel="import" href="../pandora-media-item/pandora-media-item.html">
+<link rel="import" href="../pandora-media-factory/pandora-media-factory.html">
+<link rel="import" href="../pandora-tag-list/pandora-tag-list.html">
+<link rel="import" href="../pandora-note/pandora-note.html">
+
+<dom-module is="new-question-page">
+    <style>
+        #mediaList {
+            height: 10rem;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+        }
+        footer .buttons {
+            background-color: #eee;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+    <template>
+        <paper-header-panel>
+            <paper-toolbar>
+                <paper-icon-button id="backButton" icon="back" on-tap="_moveToPrevPage"></paper-icon-button>
+                <div class="title">새로운 질문</div>
+                <paper-icon-button id="saveButton" icon="save" on-tap="_saveQuestion"></paper-icon-button>
+            </paper-toolbar>
+            <paper-input id="title" label="제목 (선택사항)" no-label-float></paper-input>
+            <paper-textarea id="content" label="무엇이 궁금한가요?"></paper-textarea>
+            <pandora-media-list id="mediaList">
+            </pandora-media-list>
+            <pandora-media-factory id="mediaFactory"></pandora-media-factory>
+            <footer>
+                <pandora-tag-list></pandora-tag-list>
+                <div class="buttons">
+                    <paper-button on-click="loadCamera">
+                        <iron-icon icon="image:photo-camera"></iron-icon>
+                    </paper-button>
+                    <paper-button on-click="loadPhotoLibrary">
+                        <iron-icon icon="image:photo-library"></iron-icon>
+                    </paper-button>
+                    <paper-button on-click="loadPandoraNote">
+                        <iron-icon icon="icons:gesture"></iron-icon>
+                    </paper-button>
+                    <paper-button on-click="loadVoiceRecorder">
+                        <iron-icon icon="av:mic"></iron-icon>
+                    </paper-button>
+                </div>
+            </footer>
+        </paper-header-panel>
+        <pandora-note id="note" on-media-sources-created="addNewMediaItemToList"></pandora-note>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'new-question-page',
+        properties: {
+            pageSelector: Object,
+        },
+        attached: function(){
+            //this._addListenerForMediaSourcesCreatedEvent();
+            this.$.note.hidden = true;
+        },
+        /* public */
+        loadCamera: function(e){
+        },
+        loadPhotoLibrary: function(e){
+        },
+        loadPandoraNote: function(e){
+            this.$.note.open();
+        },
+        loadVoiceRecorder: function(e){
+        },
+        addNewMediaItemToList: function(e){
+            var mediaType = e.detail.mediaType;
+            var mediaSources = e.detail.mediaSources;
+            var length = mediaSources.length;
+
+            for(var i = 0; i < length; i++){
+                var mediaItem = this.$.mediaFactory.makeMediaItem(mediaType, mediaSources[i]);
+                this.$.mediaList.addItem(mediaItem);
+            };
+
+            console.log(mediaItem);
+            e.target.close();
+        },
+        /* private. */
+        _addListenerForMediaSourcesCreatedEvent: function(){
+            var media = this.$.mediaList;
+            var factory = this.$.mediaFactory;
+            
+            this.$.note.addEventListener('media-sources-created', function(e){
+                var length = e.detail.mediaSources.length;
+
+                for(var i = 0; i < length; i++){
+                  var mediaItem = factory.makeMediaItem("drawing");
+                  var mediaSource = e.detail.mediaSources[i];
+
+                  mediaItem.thumbnailSrc = mediaSource.thumbnailSrc;
+                  mediaItem.sourceSrc = mediaSource.sourceSrc;
+                };
+            });
+        },
+        _moveToPrevPage: function(){
+            pageSelector.selectPrevious();
+        },
+        _moveToNextPage: function(){
+            pageSelector.selectNext();
+        },
+        _saveQuestion: function(){
+        },
+    });
+</script>

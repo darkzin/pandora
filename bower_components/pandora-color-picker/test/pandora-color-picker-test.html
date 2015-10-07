@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../../web-component-tester/browser.js"></script>
+        <link rel="import" href="../pandora-color-picker.html">
+    </head>
+    <body>
+        <pandora-color-picker id="fixture"></pandora-color-picker>
+    <script>
+        suite('pandora-color-picker', function(){
+            var colorPicker = document.querySelector("pandora-color-picker");
+
+            test('should open the menu when user click the button.', function(){
+                var dropdown = document.querySelector("#dropdown");
+                var selectButton = document.querySelector("#selectColorButton");
+                assert.isFalse(dropdown.opened, "dropdown should be opened.");
+                selectButton.fire("click");
+                assert.isTrue(dropdown.opened, "dropdown should be closed.");
+            });
+
+            test('should change color when user select color using button, then close dropdown menu.', function(){
+                var dropdown = document.querySelector("#dropdown");
+                var selectButton = document.querySelector("#selectColorButton");
+                var secondColorButton = document.querySelectorAll("#dropdown ul li paper-icon-button")[1];
+                selectButton.fire("click");
+                secondColorButton.fire("click");
+                assert.equal(colorPicker.currentColorCode, "#ff0000", "currentColor should be red.");
+                assert.isFalse(dropdown.opened, "dropdown should be closed.");
+            });
+        });
+    </script>
+    </body>
+</html>

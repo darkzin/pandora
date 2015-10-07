@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../pandora-media-factory.html">
+  </head>
+  <body>
+    <pandora-media-factory id="fixture"></pandora-media-factory>
+    <script>
+      suite("pandora-media-factory", function(){
+        suite("make pandora-media-item based on mediaType.", function(){
+          var factory;
+          setup(function(){
+            factory = document.getElementbyId("fixture");
+          });
+          test("when mediaType is image, open the imageViewer." function(){
+            var mediaItem = factory.makeMediaItem("image");
+            mediaItem.thumbnailSrc = "thumbnail.jpg";
+            mediaItem.sourceSrc = "source.jpg";
+            mediaItem.play();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
